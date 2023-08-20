@@ -12,10 +12,20 @@ contract SVer{
     function transfer(address recipient, string memory category) external payable {
         address payable _recipient = payable(recipient);
         //address payable _sender = payable(msg.sender);
+        require(_recipient != msg.sender,"Enter a valide receipient");
         require(allocations[msg.sender][category] >= msg.value, "Not sufficient balance");
         _recipient.transfer(msg.value);
         allocations[msg.sender][category] -= msg.value;
         allocations[recipient][category] += msg.value;
+    }
+
+    function withdrawal(string memory category) external payable {
+        address payable _owner = payable(msg.sender);
+        require(allocations[msg.sender][category] >= msg.value, "Enter a valid amount");
+        _owner.transfer(msg.value);
+        allocations[msg.sender][category] -= msg.value;
+
+
     }
 
     function categorybalance(string memory category) external view returns (uint){
